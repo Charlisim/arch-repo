@@ -75,7 +75,7 @@ pacstrap /mnt base base-devel linux linux-firmware zsh man-db efibootmg r intel-
               
 # Install extra packages
 pacstrap /mnt  xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools \
-               nftables iw iwd avahi nss-mdns openssh networkmanager go
+               nftables iw iwd avahi nss-mdns openssh networkmanager go sam
                
 
 # Install GUI
@@ -114,5 +114,8 @@ arch-chroot /mnt sed 's/#es_ES/es_ES/' -i /etc/locale.gen
 arch-chroot /mnt locale-gen
 cp -a "./files"* "/mnt"
 arch-chroot /mnt su carlos -c 'git clone git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si'
+arch-chroot /mnt su carlos -c 'yay -Syu --answerclean 4 --answerdiff 4 firefox-bin zettlr-bin todoist-electron brave-bin'
+arch-chroot /mnt su carlos -c 'yay -Syu --answerclean 4 --answerdiff 4 whatsapp-nativefier telegram-desktop-bin visual-studio-code-bin'
+
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
