@@ -5,7 +5,7 @@
 set -uo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
-MIRRORLIST_URL="https://www.archlinux.org/mirrorlist/?country=ES&&country=US&protocol=https&use_mirror_status=on"
+MIRRORLIST_URL="https://www.archlinux.org/mirrorlist/?country=ES&protocol=https&use_mirror_status=on"
 
 pacman -Sy --noconfirm pacman-contrib dialog git
 
@@ -70,7 +70,7 @@ mkdir /mnt/boot
 mount "${part_boot}" /mnt/boot
 
 # Install base packages
-pacstrap /mnt base base-devel linux linux-firmware zsh man-db intel-ucode  \ 
+pacstrap --noconfirm /mnt base base-devel linux linux-firmware zsh man-db intel-ucode  \ 
               sudo exa wget efibootmgr man-db man-pages pacman-contrib vim git 
               
 # Install extra packages
