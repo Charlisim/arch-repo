@@ -70,7 +70,7 @@ mkdir /mnt/boot
 mount "${part_boot}" /mnt/boot
 
 # Install base packages
-pacstrap /mnt base base-devel linux linux-firmware zsh man-db efibootmg r intel-ucode  \ 
+pacstrap /mnt base base-devel linux linux-firmware zsh man-db intel-ucode  \ 
               sudo exa wget efibootmgr man-db man-pages pacman-contrib vim git 
               
 # Install extra packages
