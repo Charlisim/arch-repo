@@ -112,6 +112,7 @@ arch-chroot /mnt hwclock --systohc
 arch-chroot /mnt echo "LANG=es_ES.UTF-8" > /etc/locale.conf
 arch-chroot /mnt sed 's/#es_ES/es_ES/' -i /etc/locale.gen
 arch-chroot /mnt locale-gen
+cp -a "./files"* "/mnt"
 arch-chroot /mnt su carlos -c 'git clone git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si'
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
