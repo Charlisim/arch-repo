@@ -6,41 +6,41 @@ set -uo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
 MIRRORLIST_URL="https://www.archlinux.org/mirrorlist/?country=ES&protocol=https&use_mirror_status=on"
-
+ 
 pacman -Sy --noconfirm pacman-contrib dialog git
-
+ 
 echo "Updating mirror list"
 curl -s "$MIRRORLIST_URL" | \
-    sed -e 's/^#Server/Server/' -e '/^#/d' | \
-    rankmirrors -n 5 - > /etc/pacman.d/mirrorlist
-
-### Get infomation from user ###
+       sed -e 's/^#Server/Server/' -e '/^#/d' | \
+       rankmirrors -n 5 - > /etc/pacman.d/mirrorlist
+ 
+# Get infomation from user ###
 hostname=$(dialog --stdout --inputbox "Enter hostname" 0 0) || exit 1
 clear
 : ${hostname:?"hostname cannot be empty"}
-
+ 
 user=$(dialog --stdout --inputbox "Enter admin username" 0 0) || exit 1
 clear
 : ${user:?"user cannot be empty"}
-
+  
 password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
 clear
 : ${password:?"password cannot be empty"}
 password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || exit 1
 clear
 [[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
-
+  
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
 clear
 
-### Set up logging ###
+# Set up logging ###
 exec 1> >(tee "stdout.log")
 exec 2> >(tee "stderr.log")
-
+ 
 timedatectl set-ntp true
 
-### Setup the disk and partitions ###
+# Setup the disk and partitions ###
 swap_size=$(free --mebi | awk '/Mem:/ {print $2}')
 swap_end=$(( $swap_size + 129 + 1 ))MiB
 
@@ -49,13 +49,13 @@ parted --script "${device}" -- mklabel gpt \
   set 1 boot on \
   mkpart primary linux-swap 129MiB ${swap_end} \
   mkpart primary ext4 ${swap_end} 100%
-
+ 
 # Simple globbing was not enough as on one device I needed to match /dev/mmcblk0p1 
 # but not /dev/mmcblk0boot1 while being able to match /dev/sda1 on other devices.
 part_boot="$(ls ${device}* | grep -E "^${device}p?1$")"
 part_swap="$(ls ${device}* | grep -E "^${device}p?2$")"
 part_root="$(ls ${device}* | grep -E "^${device}p?3$")"
-
+ 
 wipefs "${part_boot}"
 wipefs "${part_swap}"
 wipefs "${part_root}"
@@ -63,25 +63,23 @@ wipefs "${part_root}"
 mkfs.vfat -F32 "${part_boot}"
 mkswap "${part_swap}"
 mkfs.f2fs -f "${part_root}"
-
+ 
 swapon "${part_swap}"
 mount "${part_root}" /mnt
 mkdir /mnt/boot
 mount "${part_boot}" /mnt/boot
-
-# Install base packages
+ 
+# # Install base packages
 pacstrap /mnt base linux linux-firmware zsh man-db intel-ucode sudo exa wget efibootmgr man-db man-pages pacman-contrib vim git 
-              
-yes | pacstrap /mnt base-devel
                             
 # Install extra packages
-pacstrap /mnt xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools nftables iw iwd avahi nss-mdns openssh networkmanager go sam
-               
+pacstrap /mnt xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools nftables iw iwd avahi nss-mdns openssh networkmanager go 
+
 # Install GUI
-pacstrap /mnt plasma sddm archlinux-themes-sddm
+pacstrap /mnt plasma sddm
 
 # Install GUI apps
-pacstrap /mnt okular guake dolphin b
+pacstrap /mnt okular guake dolphin 
 
 # Install docker
 pacstrap /mnt docker docker-compose dnsmasq
@@ -89,6 +87,7 @@ genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
 
 arch-chroot /mnt bootctl install
+arch-chroot /mnt pacman -Sy base-devel
 
 cat <<EOF > /mnt/boot/loader/loader.conf
 default arch
@@ -111,10 +110,18 @@ arch-chroot /mnt hwclock --systohc
 arch-chroot /mnt echo "LANG=es_ES.UTF-8" > /etc/locale.conf
 arch-chroot /mnt sed 's/#es_ES/es_ES/' -i /etc/locale.gen
 arch-chroot /mnt locale-gen
-cp -a "./files"* "/mnt"
-arch-chroot /mnt su carlos -c 'git clone git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si'
-arch-chroot /mnt su carlos -c 'yay -Syu --answerclean 4 --answerdiff 4 firefox-bin zettlr-bin todoist-electron brave-bin'
-arch-chroot /mnt su carlos -c 'yay -Syu --answerclean 4 --answerdiff 4 whatsapp-nativefier telegram-desktop-bin visual-studio-code-bin albert-lite espanso-bin'
+cp -a files/* /mnt
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
+#arch-chroot /mnt su ${user} -c 'cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg'
+#cd /mnt 
+#for file in home/carlos/yay/*.zst
+#do
+#	pacman -r /mnt -U $file
+#	pacman -U $file
+#done
+
+#yay -r /mnt -Syu --answerclean 4 --answerdiff 4 sam archlinux-themes-sddm firefox-bin zettlr-bin todoist-electron brave-bin
+#yay -r /mnt -Syu --answerclean 4 --answerdiff 4 whatsapp-nativefier telegram-desktop-bin visual-studio-code-bin albert-lite espanso-bin
+
