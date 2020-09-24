@@ -75,10 +75,8 @@ pacstrap /mnt base linux linux-firmware zsh man-db intel-ucode sudo exa wget efi
 yes | pacstrap /mnt base-devel
                             
 # Install extra packages
-pacstrap /mnt  xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools \
-               nftables iw iwd avahi nss-mdns openssh networkmanager go sam
+pacstrap /mnt  xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools nftables iw iwd avahi nss-mdns openssh networkmanager go sam
                
-
 # Install GUI
 pacstrap /mnt plasma sddm archlinux-themes-sddm
 
