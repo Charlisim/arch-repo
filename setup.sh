@@ -5,7 +5,7 @@
 set -uo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
-MIRRORLIST_URL="https://www.archlinux.org/mirrorlist/?country=ES&protocol=https&use_mirror_status=on"
+MIRRORLIST_URL="https://www.archlinux.org/mirrorlist/?country=ES&&country=US&protocol=https&use_mirror_status=on"
 
 pacman -Sy --noconfirm pacman-contrib dialog git
 
@@ -115,7 +115,7 @@ arch-chroot /mnt locale-gen
 cp -a "./files"* "/mnt"
 arch-chroot /mnt su carlos -c 'git clone git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si'
 arch-chroot /mnt su carlos -c 'yay -Syu --answerclean 4 --answerdiff 4 firefox-bin zettlr-bin todoist-electron brave-bin'
-arch-chroot /mnt su carlos -c 'yay -Syu --answerclean 4 --answerdiff 4 whatsapp-nativefier telegram-desktop-bin visual-studio-code-bin'
+arch-chroot /mnt su carlos -c 'yay -Syu --answerclean 4 --answerdiff 4 whatsapp-nativefier telegram-desktop-bin visual-studio-code-bin albert-lite espanso-bin'
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
