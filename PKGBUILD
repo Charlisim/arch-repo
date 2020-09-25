@@ -9,4 +9,6 @@ depends=(
     base
     linux
     linux-firmware
+    zsh
+    todoist-bin
 )
