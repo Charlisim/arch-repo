@@ -114,14 +114,7 @@ cp -a files/* /mnt
 
 echo "$user:$password" | chpasswd --root /mnt
 echo "root:$password" | chpasswd --root /mnt
-#arch-chroot /mnt su ${user} -c 'cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg'
-#cd /mnt 
-#for file in home/carlos/yay/*.zst
-#do
-#	pacman -r /mnt -U $file
-#	pacman -U $file
-#done
 
-#yay -r /mnt -Syu --answerclean 4 --answerdiff 4 sam archlinux-themes-sddm firefox-bin zettlr-bin todoist-electron brave-bin
-#yay -r /mnt -Syu --answerclean 4 --answerdiff 4 whatsapp-nativefier telegram-desktop-bin visual-studio-code-bin albert-lite espanso-bin
+echo "Installation finished"
 
+git clone http://github.com/charlisim/arch-repo /mnt/home/carlos/arch-repo
