@@ -6,7 +6,7 @@ set -uo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
 MIRRORLIST_URL="https://www.archlinux.org/mirrorlist/?country=ES&protocol=https&use_mirror_status=on"
- 
+timedatectl set-ntp true
 pacman -Sy --noconfirm pacman-contrib dialog git
  
 echo "Updating mirror list"
@@ -73,10 +73,10 @@ mount "${part_boot}" /mnt/boot
 pacstrap /mnt base linux linux-firmware zsh man-db intel-ucode sudo exa wget efibootmgr man-db man-pages pacman-contrib vim git 
                             
 # Install extra packages
-pacstrap /mnt xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools nftables iw iwd avahi nss-mdns openssh networkmanager go 
+pacstrap /mnt xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools nftables iw iwd avahi nss-mdns openssh networkmanager go xdg-user-dirs xorg 
 
 # Install GUI
-pacstrap /mnt plasma sddm
+pacstrap /mnt plasma sddm xorg
 
 # Install GUI apps
 pacstrap /mnt okular guake dolphin 
@@ -105,6 +105,7 @@ arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,g
 arch-chroot /mnt chsh -s /usr/bin/zsh
 arch-chroot /mnt systemctl enable sddm.service
 arch-chroot /mnt systemctl enable NetworkManager.service
+arch-chroot /mnt timedatectl set-ntp true
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Madrid "/etc/localtime"
 arch-chroot /mnt hwclock --systohc
 arch-chroot /mnt echo "LANG=es_ES.UTF-8" > /etc/locale.conf
