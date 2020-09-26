@@ -70,14 +70,21 @@ mkdir /mnt/boot
 mount "${part_boot}" /mnt/boot
  
 # # Install base packages
-pacstrap /mnt base linux linux-firmware zsh man-db intel-ucode sudo exa wget efibootmgr man-db man-pages pacman-contrib vim git 
+pacstrap /mnt base linux linux-firmware zsh man-db intel-ucode sudo exa wget efibootmgr man-db man-pages pacman-contrib vim git lshw sof bind-tools mtr socat htop iotop openbsd-netcat strace tcpdump whois
+    iftop dstat
                             
 # Install extra packages
 pacstrap /mnt xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools nftables iw iwd avahi nss-mdns openssh networkmanager go xdg-user-dirs xorg 
 
 # Install GUI
-pacstrap /mnt plasma sddm xorg
+pacstrap /mnt plasma sddm xorg sway swaylock swayidle xorg-server-xwayland wl-clipboard brightnessctl
+        playerctl swayshot udiskie j4-dmenu-desktop bemenu mako qt5-wayland redshift python-gobject bluez bluez-utils pulseaudio pulseaudio-alsa
+        pulseaudio-bluetooth pavucontrol paprefs scrot arandr
 
+# Install fonts
+
+pacstrap /mnt noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-monofur
+        ttf-dejavu xorg-fonts-misc ttf-font-awesome
 # Install GUI apps
 pacstrap /mnt okular guake dolphin 
 
