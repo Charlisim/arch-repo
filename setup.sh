@@ -79,10 +79,10 @@ pacstrap /mnt xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools 
 pacstrap /mnt plasma sddm xorg sway swaylock swayidle xorg-server-xwayland
 
 # Install GUI apps
-pacstrap /mnt okular guake dolphin 
+pacstrap /mnt okular konsole dolphin 
 
 # Install docker
-pacstrap /mnt docker docker-compose dnsmasq
+pacstrap /mnt docker dnsmasq
 genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
 echo "${hostname}" > /mnt/etc/hostname
 
