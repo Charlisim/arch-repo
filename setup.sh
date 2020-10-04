@@ -97,7 +97,7 @@ cat <<EOF > /mnt/boot/loader/entries/arch.conf
 title    Arch Linux
 linux    /vmlinuz-linux
 initrd   /initramfs-linux.img
-options  root=PARTUUID=$(blkid -s PARTUUID -o value "$part_root") rw quiet splash
+options  root=PARTUUID=$(blkid -s PARTUUID -o value "$part_root") rw quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0
 EOF
 
 
