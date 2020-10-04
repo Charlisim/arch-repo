@@ -97,7 +97,7 @@ cat <<EOF > /mnt/boot/loader/entries/arch.conf
 title    Arch Linux
 linux    /vmlinuz-linux
 initrd   /initramfs-linux.img
-options  root=PARTUUID=$(blkid -s PARTUUID -o value "$part_root") rw
+options  root=PARTUUID=$(blkid -s PARTUUID -o value "$part_root") rw quiet splash
 EOF
 
 
@@ -105,6 +105,7 @@ arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,g
 arch-chroot /mnt chsh -s /usr/bin/zsh
 arch-chroot /mnt systemctl enable sddm.service
 arch-chroot /mnt systemctl enable NetworkManager.service
+arch-chroot /mnt systemctl enable NetworkManager-wait-online.service
 arch-chroot /mnt timedatectl set-ntp true
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Madrid "/etc/localtime"
 arch-chroot /mnt hwclock --systohc
