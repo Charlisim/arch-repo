@@ -17,7 +17,7 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 sudo systemctl disable sddm.service && systemctl enable sddm-plymouth.service
-
+# In case of doubt about plymouth visit https://wiki.archlinux.org/index.php/Plymouth
 sudo plymouth-set-default-theme -R bgrt
 sudo cp /usr/share/plymouth/arch-logo.png /usr/share/plymouth/themes/spinner/watermark.png
 # Configurate git
