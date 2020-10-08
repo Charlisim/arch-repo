@@ -73,13 +73,17 @@ mount "${part_boot}" /mnt/boot
 pacstrap /mnt base linux linux-firmware zsh man-db intel-ucode sudo exa wget efibootmgr man-db man-pages pacman-contrib vim git
                             
 # Install extra packages
-pacstrap /mnt xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools nftables iw iwd avahi nss-mdns openssh networkmanager go xdg-user-dirs xorg 
+pacstrap /mnt xf86-video-intel xf86-video-vesa e2fsprogs exfat-utils dosfstools f2fs-tools nftables iw iwd avahi nss-mdns openssh networkmanager go xdg-user-dirs xorg powertop tlp acpi_call tlpui sysfsutils dhcpcd  
+
+# Install bluetooth
+
+pacstrap /mnt bluez bluez-utils
 
 # Install GUI
 pacstrap /mnt plasma sddm xorg sway swaylock swayidle xorg-server-xwayland
 
 # Install GUI apps
-pacstrap /mnt okular konsole dolphin 
+pacstrap /mnt okular konsole dolphin bluedevil spectacle
 
 # Install docker
 pacstrap /mnt docker dnsmasq
@@ -101,11 +105,14 @@ options  root=PARTUUID=$(blkid -s PARTUUID -o value "$part_root") rw quiet splas
 EOF
 
 
-arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input "$user"
+arch-chroot /mnt useradd -mU -s /usr/bin/zsh -G wheel,uucp,video,audio,storage,games,input,docker,lp "$user"
 arch-chroot /mnt chsh -s /usr/bin/zsh
 arch-chroot /mnt systemctl enable sddm.service
 arch-chroot /mnt systemctl enable NetworkManager.service
 arch-chroot /mnt systemctl enable NetworkManager-wait-online.service
+arch-chroot /mnt systemctl enable docker.service
+arch-chroot /mnt systemctl enable tlp.service
+arch-chroot /mnt systemctl enable bluetooth.service
 arch-chroot /mnt timedatectl set-ntp true
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Madrid "/etc/localtime"
 arch-chroot /mnt hwclock --systohc
